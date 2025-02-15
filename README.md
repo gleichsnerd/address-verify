@@ -4,7 +4,8 @@ A nicely robust implementation of an address verification cli tool in Node
 
 ## Project dependencies
 
-- Any Node.js version >= 14 LTS
+- Any Node.js version >= 18 LTS
+    - Why 18? It's the easiest to install out the gate on Apple Silicon, and I don't want to make anyone have to debug installing node :)
 - Preferrably a UNIX environment to run this in
     - Powershell users beware, but you should be fine as long as you have a working Node.js installation
 
