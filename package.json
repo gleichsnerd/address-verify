@@ -1,0 +1,22 @@
+{
+  "name": "address-verify",
+  "version": "1.0.0",
+  "description": "A nicely robust implementation of an address verification cli tool in Node",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "start:dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "author": "-redacted-",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.8.0",
+    "typescript": "^5.2.2",
+    "vitest": "^0.34.6",
+    "@vitest/coverage-v8": "^0.34.6"
+  }
+}
