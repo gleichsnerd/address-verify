@@ -24,6 +24,7 @@
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@types/node": "^20.8.0",
+    "@types/yargs": "^17.0.33",
     "@vitest/coverage-v8": "^0.34.6",
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.1",
@@ -33,5 +34,8 @@
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.24.0",
     "vitest": "^0.34.6"
+  },
+  "dependencies": {
+    "yargs": "^17.7.2"
   }
 }
