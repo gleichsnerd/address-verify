@@ -22,6 +22,8 @@
 <!-- Describe the tests you ran and how to reproduce them -->
 - [ ] Unit tests added/updated
 - [ ] Manual testing completed
+- [ ] CI checks are passing
+- [ ] Code coverage is maintained or improved
 
 ## Additional Notes
 <!-- Add any additional notes or context about the PR here -->
