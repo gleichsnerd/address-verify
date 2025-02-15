@@ -1,8 +1,10 @@
 import globals from 'globals';
 import pluginJs from '@eslint/js';
 import tseslint from 'typescript-eslint';
-import prettierConfig from 'eslint-config-prettier';
-import prettierPlugin from 'eslint-plugin-prettier';
+import { FlatCompat } from '@eslint/eslintrc';
+import prettier from 'eslint-plugin-prettier';
+
+const compat = new FlatCompat();
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -18,7 +20,7 @@ export default [
       },
     },
     plugins: {
-      prettier: prettierPlugin,
+      prettier,
     },
     rules: {
       'prettier/prettier': 'error',
@@ -26,5 +28,7 @@ export default [
   },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
-  prettierConfig,
+  ...compat.config({
+    extends: ['prettier'],
+  }),
 ];
