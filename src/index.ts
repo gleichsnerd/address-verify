@@ -1,1 +1,1 @@
-console.log("Hello, Empora Title!")
+console.log('Hello, Empora Title!');
