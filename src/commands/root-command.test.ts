@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-import BaseCommand from './base-command.js';
 import RootCommand from './root-command.js';
 import captureOutput from '../utilities/capture-output.js';
 import { ArgumentsCamelCase } from 'yargs';
