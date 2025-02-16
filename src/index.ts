@@ -9,6 +9,8 @@ async function main() {
 }
 
 // Only call process.exit if we're not in a test environment
+// As such, ignore coverage for this section
+/* v8 ignore start */
 if (process.env.NODE_ENV !== 'test') {
   main()
     .then((code) => {
@@ -19,5 +21,6 @@ if (process.env.NODE_ENV !== 'test') {
       process.exit(1);
     });
 }
+/* v8 ignore end */
 
 export default main;
