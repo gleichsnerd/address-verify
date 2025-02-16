@@ -10,6 +10,8 @@ const compat = new FlatCompat();
 export default [
   {
     ignores: ['**/dist/**/*', '**/node_modules/**/*'],
+  },
+  {
     files: ['**/*.{js,mjs,cjs,ts}'],
   },
   {
