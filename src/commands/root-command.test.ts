@@ -12,7 +12,9 @@ describe('RootCommand', () => {
 
   it('has correct description', async () => {
     const command = new RootCommand();
-    expect(command.describe).toBe('Root command for file operations');
+    expect(command.describe).toBe(
+      'Validates addresses for piped-in CSV files or provided filename',
+    );
   });
 
   it('allows zero arguments than one argument', async () => {
