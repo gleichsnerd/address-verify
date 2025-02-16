@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import RootCommand from './root-command.js';
-import captureOutput from '../utilities/capture-output.js';
+import captureOutput from '../utilities/tests/capture-output.js';
 import { ArgumentsCamelCase } from 'yargs';
 
 describe('RootCommand', () => {

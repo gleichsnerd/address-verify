@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import CommandRouter from './command-router.js';
 import RootCommand from './root-command.js';
 import BaseCommand from './base-command.js';
-import captureOutput from '../utilities/capture-output.js';
+import captureOutput from '../utilities/tests/capture-output.js';
 
 class FakeCommandSuccess extends BaseCommand {
   command = 'fake-success';
