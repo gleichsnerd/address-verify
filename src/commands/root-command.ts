@@ -1,3 +1,5 @@
+import AddressCSVParser from '../parsers/address-csv-parser.js';
+import CSVFileParser from '../parsers/csv-file-parser.js';
 import BaseCommand from './base-command.js';
 import { ArgumentsCamelCase } from 'yargs';
 
@@ -18,7 +20,8 @@ import { ArgumentsCamelCase } from 'yargs';
  */
 class RootCommand extends BaseCommand {
   command = '$0 [filename]';
-  describe = 'Validates addresses for piped-in CSV files or provided filename';
+  describe =
+    'Validates addresses for piped-in CSV files or provided CSV filename';
 
   async handler(args: ArgumentsCamelCase): Promise<void> {
     // Special considerations for the root command
@@ -32,9 +35,18 @@ class RootCommand extends BaseCommand {
       console.log('TODO: PIPED INPUT');
     } else if (
       args.filename &&
-      args.filename.toString().toLowerCase().endsWith('.csv')
+      CSVFileParser.isCSVFile(args.filename as string)
     ) {
-      console.log(`TODO: Filename provided: ${args.filename}`);
+      console.log(`Reading provided file: ${args.filename}`);
+      const parser = new AddressCSVParser();
+      const data = await parser.parse(args.filename as string);
+      console.log(`${data.length} addresses to validate`);
+      // TODO: Validate addresses
+      return;
+    } else if (args.filename) {
+      console.log(
+        `Invalid filename \`${args.filename}\`. Use --help for usage.`,
+      );
     } else {
       console.log('No valid input provided. Use --help for usage.');
     }
