@@ -10,6 +10,7 @@
       "name": "Debug Program",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/dist/index.js",
+      "args": ["data/test-example.csv"],
       "preLaunchTask": "npm: build",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "sourceMaps": true,
