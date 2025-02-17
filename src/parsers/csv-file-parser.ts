@@ -19,7 +19,7 @@ class CSVFileParser<Row extends BaseCSVRow> {
   public static isCSVFile(filename: string): boolean {
     // This is a naive check if a given filename is a csv -- it would be better to validate
     // the actual content, but for the sake of this project we will consider that out of scope
-    return filename.toLocaleLowerCase().endsWith('.csv');
+    return filename.toLowerCase().endsWith('.csv');
   }
 
   public validateSchema(row: Row): boolean {
