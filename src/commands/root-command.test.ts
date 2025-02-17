@@ -12,7 +12,7 @@ describe('RootCommand', () => {
   it('has correct description', async () => {
     const command = new RootCommand();
     expect(command.describe).toBe(
-      'Validates addresses for piped-in CSV files or provided filename',
+      'Validates addresses for piped-in CSV files or provided CSV filename',
     );
   });
 
@@ -53,21 +53,25 @@ describe('RootCommand', () => {
     const command = new RootCommand();
     const { output } = await captureOutput(() =>
       command.handler({
-        filename: ['testfile.CSV'],
+        filename: 'data/test-example.csv',
       } as unknown as ArgumentsCamelCase),
     );
 
-    expect(output).toBe('TODO: Filename provided: testfile.CSV');
+    expect(output).toContain(
+      'Reading provided file: data/test-example.csv\n2 addresses to validate',
+    );
   });
 
   it('rejects non-csv files', async () => {
     const command = new RootCommand();
     const { output } = await captureOutput(() =>
       command.handler({
-        filename: ['testfile.txt'],
+        filename: 'testfile.txt',
       } as unknown as ArgumentsCamelCase),
     );
 
-    expect(output).toBe('No valid input provided. Use --help for usage.');
+    expect(output).toBe(
+      'Invalid filename `testfile.txt`. Use --help for usage.',
+    );
   });
 });
