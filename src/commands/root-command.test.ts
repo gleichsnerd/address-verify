@@ -2,8 +2,15 @@ import { describe, it, expect } from 'vitest';
 import RootCommand from './root-command.js';
 import captureOutput from '../utilities/tests/capture-output.js';
 import { ArgumentsCamelCase } from 'yargs';
+import mockStdin from '../utilities/tests/mock-stdin.js';
+import path from 'path';
+import fs from 'fs';
 
 describe('RootCommand', () => {
+  beforeEach(() => {
+    process.stdin.isTTY = true;
+  });
+
   it('has correct command', async () => {
     const command = new RootCommand();
     expect(command.command).toBe('$0 [filename]');
@@ -35,18 +42,20 @@ describe('RootCommand', () => {
   });
 
   it('handles piped input', async () => {
-    const originalIsTTY = process.stdin.isTTY;
     process.stdin.isTTY = false;
 
     const command = new RootCommand();
+    const testFile = path.join(__dirname, '../../data/test-example.csv');
+    const fileContents = fs.readFileSync(testFile, 'utf8');
+    mockStdin(fileContents);
     const { output } = await captureOutput(() =>
       command.handler({ _: [] } as unknown as ArgumentsCamelCase),
     );
 
-    expect(output).toBe('TODO: PIPED INPUT');
+    expect(output).toContain('Reading piped input');
+    expect(output).toContain('2 addresses to validate');
 
-    // Restore original isTTY value
-    process.stdin.isTTY = originalIsTTY;
+    process.stdin.isTTY = true;
   });
 
   it('handles `filename` parameter', async () => {
@@ -57,9 +66,8 @@ describe('RootCommand', () => {
       } as unknown as ArgumentsCamelCase),
     );
 
-    expect(output).toContain(
-      'Reading provided file: data/test-example.csv\n2 addresses to validate',
-    );
+    expect(output).toContain('Reading provided file: data/test-example.csv');
+    expect(output).toContain('2 addresses to validate');
   });
 
   it('rejects non-csv files', async () => {

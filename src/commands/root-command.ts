@@ -1,5 +1,5 @@
-import AddressCSVParser from '../parsers/address-csv-parser.js';
-import CSVFileParser from '../parsers/csv-file-parser.js';
+import AddressParser from '../parsers/address-parser.js';
+import CSVParser from '../parsers/csv-parser.js';
 import BaseCommand from './base-command.js';
 import { ArgumentsCamelCase } from 'yargs';
 
@@ -31,15 +31,17 @@ class RootCommand extends BaseCommand {
     }
 
     // If we have piped input, then we need to handle it
-    if (process.stdin.isTTY === false) {
-      console.log('TODO: PIPED INPUT');
-    } else if (
-      args.filename &&
-      CSVFileParser.isCSVFile(args.filename as string)
-    ) {
+    if (CSVParser.isPipeData()) {
+      console.log('Reading piped input');
+      const parser = new AddressParser();
+      const data = await parser.parseFromPipe();
+      console.log(`${data.length} addresses to validate`);
+      // TODO: Validate addresses
+      return;
+    } else if (args.filename && CSVParser.isCSVFile(args.filename as string)) {
       console.log(`Reading provided file: ${args.filename}`);
-      const parser = new AddressCSVParser();
-      const data = await parser.parse(args.filename as string);
+      const parser = new AddressParser();
+      const data = await parser.parseFromCSV(args.filename as string);
       console.log(`${data.length} addresses to validate`);
       // TODO: Validate addresses
       return;
