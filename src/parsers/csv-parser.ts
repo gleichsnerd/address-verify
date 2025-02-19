@@ -92,7 +92,7 @@ class CSVParser<Row extends BaseRow> extends RowParser<Row> {
   protected async parsePipeInput(data: string): Promise<Row[]> {
     // Split input into lines and parse as CSV
     const lines = data.trim().split('\n');
-    if (lines.length === 0) {
+    if (lines.length === 0 || (lines.length === 1 && lines[0].trim() === '')) {
       return [];
     }
 

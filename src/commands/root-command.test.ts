@@ -26,16 +26,16 @@ describe('RootCommand', () => {
     );
   });
 
-  it('allows zero arguments than one argument', async () => {
+  it('rejects zero arguments if no pipe data', async () => {
     const command = new RootCommand();
     const { output } = await captureOutput(() =>
-      command.handler({ _: ['arg1', 'arg2'] } as ArgumentsCamelCase),
+      command.handler({ _: [] } as unknown as ArgumentsCamelCase),
     );
     // Should not output anything as it early returns to allow other commands to run
-    expect(output).toBe('');
+    expect(output).toBe('No valid input provided. Use --help for usage.');
   });
 
-  it('rejects more than one argument', async () => {
+  it('skips when more than one argument', async () => {
     const command = new RootCommand();
     const { output } = await captureOutput(() =>
       command.handler({ _: ['arg1', 'arg2'] } as ArgumentsCamelCase),
@@ -50,7 +50,7 @@ describe('RootCommand', () => {
     const command = new RootCommand();
     const { error } = await captureOutput(() =>
       command.handler({
-        filename: 'data/test-example.csv',
+        filename: 'data/test-mixed.csv',
       } as unknown as ArgumentsCamelCase),
     );
     // Should not output anything as it early returns to allow other commands to run
@@ -83,12 +83,16 @@ describe('RootCommand', () => {
     const command = new RootCommand();
     const { output } = await captureOutput(() =>
       command.handler({
-        filename: 'data/test-example.csv',
+        filename: 'data/test-mixed.csv',
       } as unknown as ArgumentsCamelCase),
     );
 
-    expect(output).toContain('Reading provided file: data/test-example.csv');
+    expect(output).toContain('Reading provided file: data/test-mixed.csv');
     expect(output).toContain('2 addresses to validate');
+    expect(output).toContain(
+      '143 e Maine Street, Columbus, 43215 -> 143 e Maine Street, Columbus, 43215',
+    );
+    expect(output).toContain('1 Empora St, Invalid, 11111 -> Invalid Address');
   });
 
   it('rejects non-csv files', async () => {
