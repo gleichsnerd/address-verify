@@ -1,5 +1,7 @@
-import AddressParser from '../parsers/address-parser.js';
+import AddressParser, { AddressRow } from '../parsers/address-parser.js';
 import CSVParser from '../parsers/csv-parser.js';
+import SmartyService from '../services/smarty.js';
+import AddressService from '../services/address.js';
 import BaseCommand from './base-command.js';
 import { ArgumentsCamelCase } from 'yargs';
 
@@ -30,27 +32,48 @@ class RootCommand extends BaseCommand {
       return;
     }
 
+    if (!SmartyService.validateEnvironment()) {
+      console.error(
+        'Missing required environment variables SMARTY_AUTH_ID and SMARTY_AUTH_TOKEN',
+      );
+      return;
+    }
+
+    let data: AddressRow[] = [];
     // If we have piped input, then we need to handle it
     if (CSVParser.isPipeData()) {
       console.log('Reading piped input');
       const parser = new AddressParser();
-      const data = await parser.parseFromPipe();
-      console.log(`${data.length} addresses to validate`);
-      // TODO: Validate addresses
-      return;
+      data = await parser.parseFromPipe();
     } else if (args.filename && CSVParser.isCSVFile(args.filename as string)) {
       console.log(`Reading provided file: ${args.filename}`);
       const parser = new AddressParser();
-      const data = await parser.parseFromCSV(args.filename as string);
-      console.log(`${data.length} addresses to validate`);
-      // TODO: Validate addresses
-      return;
+      data = await parser.parseFromCSV(args.filename as string);
     } else if (args.filename) {
       console.log(
         `Invalid filename \`${args.filename}\`. Use --help for usage.`,
       );
+      return;
     } else {
       console.log('No valid input provided. Use --help for usage.');
+      return;
+    }
+
+    console.log(`${data.length} addresses to validate`);
+    const addressService = new AddressService();
+    const results = await addressService.validate(data);
+
+    console.log(''); // Newline for readability
+    for (const result of results) {
+      const originalAddress = AddressService.addressToString(
+        result.originalAddress,
+      );
+      if (result.valid) {
+        const validatedAddress = AddressService.addressToString(result.address);
+        console.log(`${originalAddress} -> ${validatedAddress}`);
+      } else {
+        console.log(`${originalAddress} -> Invalid Address`);
+      }
     }
   }
 }

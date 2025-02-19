@@ -46,7 +46,10 @@ describe('CSVParser', () => {
     });
 
     it('should parse any CSV if no schema is present', async () => {
-      const testFile = path.join(__dirname, '__fixtures__/valid.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/valid.csv',
+      );
       const result = await parser.parseFromCSV(testFile);
 
       expect(result).toEqual([
@@ -64,7 +67,10 @@ describe('CSVParser', () => {
         schema = ['Street', 'City', 'Zip Code'];
       }
       const parser = new TestParser();
-      const testFile = path.join(__dirname, '__fixtures__/valid.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/valid.csv',
+      );
       const result = await parser.parseFromCSV(testFile);
 
       expect(result).toEqual([
@@ -82,7 +88,10 @@ describe('CSVParser', () => {
         schema = ['Street', 'City', 'Zip Code'];
       }
       const parser = new TestParser();
-      const testFile = path.join(__dirname, '__fixtures__/empty.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/empty.csv',
+      );
       const result = await parser.parseFromCSV(testFile);
 
       expect(result).toEqual([]);
@@ -93,7 +102,10 @@ describe('CSVParser', () => {
         schema = ['Street', 'City', 'Zip Code'];
       }
       const parser = new TestParser();
-      const testFile = path.join(__dirname, '__fixtures__/extra-column.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/extra-column.csv',
+      );
 
       try {
         await parser.parseFromCSV(testFile);
@@ -110,7 +122,10 @@ describe('CSVParser', () => {
         schema = ['Street', 'City', 'Zip Code'];
       }
       const parser = new TestParser();
-      const testFile = path.join(__dirname, '__fixtures__/missing-column.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/missing-column.csv',
+      );
 
       try {
         await parser.parseFromCSV(testFile);
@@ -127,16 +142,14 @@ describe('CSVParser', () => {
         schema = ['Street', 'City', 'Zip Code'];
       }
       const parser = new TestParser();
-      const testFile = path.join(__dirname, '__fixtures__/no-headers.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/no-headers.csv',
+      );
 
-      try {
-        await parser.parseFromCSV(testFile);
-        // We should never hit this line, so we fail the test if we do
-        expect(true).toBe(false);
-      } catch (e) {
-        expect(e).toBeInstanceOf(Error);
-        expect((e as Error).message).toBe('Invalid schema');
-      }
+      await expect(parser.parseFromCSV(testFile)).rejects.toThrow(
+        'column header mismatch expected: 0 columns got: 3',
+      );
     });
   });
 
@@ -148,7 +161,10 @@ describe('CSVParser', () => {
     });
 
     it('should parse a valid piped csv file', async () => {
-      const testFile = path.join(__dirname, '__fixtures__/valid.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/valid.csv',
+      );
       const fileContents = fs.readFileSync(testFile, 'utf8');
       mockStdin(fileContents);
 
@@ -179,7 +195,10 @@ describe('CSVParser', () => {
         schema = ['Street', 'City', 'Zip Code'];
       }
       const parser = new TestParser();
-      const testFile = path.join(__dirname, '__fixtures__/extra-column.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/extra-column.csv',
+      );
       const fileContents = fs.readFileSync(testFile, 'utf8');
       mockStdin(fileContents);
 
@@ -198,7 +217,10 @@ describe('CSVParser', () => {
         schema = ['Street', 'City', 'Zip Code'];
       }
       const parser = new TestParser();
-      const testFile = path.join(__dirname, '__fixtures__/missing-column.csv');
+      const testFile = path.join(
+        __dirname,
+        '../utilities/tests/fixtures/csv/missing-column.csv',
+      );
       const fileContents = fs.readFileSync(testFile, 'utf8');
       mockStdin(fileContents);
 

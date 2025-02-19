@@ -14,7 +14,8 @@
       "preLaunchTask": "npm: build",
       "outFiles": ["${workspaceFolder}/dist/**/*.js"],
       "sourceMaps": true,
-      "console": "integratedTerminal"
+      "console": "integratedTerminal",
+      "envFile": "${workspaceFolder}/.env"
     },
     {
       "type": "node",
