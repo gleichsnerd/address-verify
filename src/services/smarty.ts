@@ -1,7 +1,5 @@
 import SmartySDK from 'smartystreets-javascript-sdk';
-import { SMARTY_AUTH_ID, SMARTY_AUTH_TOKEN } from '../utilities/env.js';
-
-const SmartyCore = SmartySDK.core;
+import { getSmartyAuthId, getSmartyAuthToken } from '../utilities/env.js';
 
 type SmartyClient = ReturnType<
   SmartySDK.core.ClientBuilder<unknown, unknown>['buildUsStreetApiClient']
@@ -49,18 +47,25 @@ class SmartyService {
     if (!SmartyService.validateEnvironment()) {
       throw new Error('Missing required environment variables');
     }
+
+    // Developer's Note: Hositing the breakdown of the SDK mucks with mocking
+    const SmartyCore = SmartySDK.core;
+    const smartyAuthId = getSmartyAuthId();
+    const smartyAuthToken = getSmartyAuthToken();
     const clientBuilder = new SmartyCore.ClientBuilder(
-      new SmartyCore.StaticCredentials(SMARTY_AUTH_ID!, SMARTY_AUTH_TOKEN!),
+      new SmartyCore.StaticCredentials(smartyAuthId!, smartyAuthToken!),
     );
     this.smarty = clientBuilder.buildUsStreetApiClient();
   }
 
   public static validateEnvironment(): boolean {
+    const smartyAuthId = getSmartyAuthId();
+    const smartyAuthToken = getSmartyAuthToken();
     return (
-      !!SMARTY_AUTH_ID &&
-      SMARTY_AUTH_ID?.length > 0 &&
-      !!SMARTY_AUTH_TOKEN &&
-      SMARTY_AUTH_TOKEN?.length > 0
+      !!smartyAuthId &&
+      smartyAuthId.length > 0 &&
+      !!smartyAuthToken &&
+      smartyAuthToken.length > 0
     );
   }
 
@@ -84,14 +89,20 @@ class SmartyService {
       components.streetPostdirection ?? '',
     ];
 
-    return parts.join(' ').trim();
+    return parts
+      .filter((part) => part.length > 0)
+      .join(' ')
+      .trim();
   }
 
   public formatCity(lookup: SmartyLookup): string {
     const components = lookup.components;
     const parts = [components.cityName ?? ''];
 
-    return parts.join(' ').trim();
+    return parts
+      .filter((p) => p.length > 0)
+      .join(' ')
+      .trim();
   }
 
   public formatZipCode(lookup: SmartyLookup): string {
@@ -114,6 +125,7 @@ class SmartyService {
   public async validateAddresses(
     addresses: Address[],
   ): Promise<ValidationResult[]> {
+    const SmartyCore = SmartySDK.core;
     if (!this.smarty) {
       throw new Error('Smarty client not initialized');
     }
@@ -127,6 +139,12 @@ class SmartyService {
     const results: ValidationResult[] = [];
     for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
       const batch = batches[batchIndex];
+      /*
+       * Developer's Note:
+       * While we could do pre-validation of addresses to automatically flag ones with missing fields as invalid,
+       * for the sake of this iteration I want to defer to Smarty for all validation. Future work could include
+       * said pre-validation to reduce the number of requests to Smarty or flag for various business cases.
+       */
       const lookups = batch.map((address) => this.addressToLookup(address));
       const batchLookup = new SmartyCore.Batch<Lookup>();
       lookups.forEach((lookup) => batchLookup.add(lookup));

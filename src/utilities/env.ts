@@ -4,5 +4,5 @@ function getEnvString(variable: string): string | null {
 }
 
 // Environment variables
-export const SMARTY_AUTH_ID = getEnvString('SMARTY_AUTH_ID');
-export const SMARTY_AUTH_TOKEN = getEnvString('SMARTY_AUTH_TOKEN');
+export const getSmartyAuthId = () => getEnvString('SMARTY_AUTH_ID');
+export const getSmartyAuthToken = () => getEnvString('SMARTY_AUTH_TOKEN');
