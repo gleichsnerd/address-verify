@@ -1,3 +1,4 @@
+import '../utilities/tests/mocks/smartystreets-javascript-sdk.js';
 import { describe, it, expect } from 'vitest';
 import RootCommand from './root-command.js';
 import captureOutput from '../utilities/tests/capture-output.js';
@@ -9,6 +10,8 @@ import fs from 'fs';
 describe('RootCommand', () => {
   beforeEach(() => {
     process.stdin.isTTY = true;
+    process.env.SMARTY_AUTH_ID = 'test-id';
+    process.env.SMARTY_AUTH_TOKEN = 'test-token';
   });
 
   it('has correct command', async () => {
@@ -41,11 +44,29 @@ describe('RootCommand', () => {
     expect(output).toBe('');
   });
 
+  it('fails early if missing environment variables', async () => {
+    delete process.env.SMARTY_AUTH_ID;
+    delete process.env.SMARTY_AUTH_TOKEN;
+    const command = new RootCommand();
+    const { error } = await captureOutput(() =>
+      command.handler({
+        filename: 'data/test-example.csv',
+      } as unknown as ArgumentsCamelCase),
+    );
+    // Should not output anything as it early returns to allow other commands to run
+    expect(error).toBe(
+      'Missing required environment variables SMARTY_AUTH_ID and SMARTY_AUTH_TOKEN',
+    );
+  });
+
   it('handles piped input', async () => {
     process.stdin.isTTY = false;
 
     const command = new RootCommand();
-    const testFile = path.join(__dirname, '../../data/test-example.csv');
+    const testFile = path.join(
+      __dirname,
+      '../utilities/tests/fixtures/csv/valid.csv',
+    );
     const fileContents = fs.readFileSync(testFile, 'utf8');
     mockStdin(fileContents);
     const { output } = await captureOutput(() =>
