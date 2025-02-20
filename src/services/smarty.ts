@@ -41,6 +41,9 @@ export type ValidationResult =
   | { valid: true; address: Address; originalAddress: Address }
   | { valid: false; originalAddress: Address };
 
+/**
+ * SmartyService: Wrapper service for the SmartyStreets SDK
+ */
 class SmartyService {
   private smarty: null | SmartyClient = null;
   constructor() {
