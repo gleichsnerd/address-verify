@@ -1,6 +1,9 @@
 import { AddressRow } from '../parsers/address-parser.js';
 import SmartyService, { Address, ValidationResult } from './smarty.js';
 
+/**
+ * AddressService: Handles address-related operations and interactions with the SmartyService
+ */
 class AddressService {
   public addressRowToAddress(row: AddressRow): Address {
     return {

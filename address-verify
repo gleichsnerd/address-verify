@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# Get the directory where the script is located (following symlinks)
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+done
+DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+# Use local node_modules
+export NODE_PATH="$DIR/node_modules:$NODE_PATH"
+
+# Run the Node.js application with ES modules enabled
+node "$DIR/dist/index.js" "$@"

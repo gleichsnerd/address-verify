@@ -41,6 +41,12 @@ export type ValidationResult =
   | { valid: true; address: Address; originalAddress: Address }
   | { valid: false; originalAddress: Address };
 
+/**
+ * SmartyService: Wrapper service for the SmartyStreets SDK
+ *
+ * Developer's Note: While we could also directly use the API via REST calls,
+ * I opted for using the SDK to reduce boilerplate with handling requests and responses.
+ */
 class SmartyService {
   private smarty: null | SmartyClient = null;
   constructor() {
